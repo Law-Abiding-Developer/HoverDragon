@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net472</TargetFramework>
+        <Version>1.0.0</Version>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>11</LangVersion>
+        <BepInExPluginGUID>com.lad.hoverdragon</BepInExPluginGUID>
+        <BepInPluginName>HoverDragon</BepInPluginName>
+
+        <RestoreAdditionalProjectSources>
+            https://api.nuget.org/v3/index.json;
+            https://nuget.bepinex.dev/v3/index.json;
+        </RestoreAdditionalProjectSources>
+
+        <PackageId>HoverDragon</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="1.1.0"/>
+        <PackageReference Include="Unity.InputSystem" Version="1.5.0"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2019.4.36" IncludeAssets="compile"/>
+        <PackageReference Include="Subnautica.GameLibs" Version="82304.0.0-r.0"/>
+        <PackageReference Include="PolySharp" Version="1.15.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all"/>
+    </ItemGroup>
+
+    <Import Project="GameDirectory.targets"/>
+
+    <ItemGroup>
+        <Reference Include="Nautilus" Condition="Exists('$(GameDir)')">
+            <HintPath>$(GameDir)/BepInEx/plugins/Nautilus/Nautilus.dll</HintPath>
+        </Reference>
+        <PackageReference Include="Subnautica.Nautilus" Version="1.0.0-pre.49" Condition="!Exists('$(GameDir)')"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="LocalizationFiles\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="ECCLibrary">
+            <HintPath>$(GameDir)/BepInEx/plugins/ECCLibrary/ECCLibrary.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(GameDir)')">
+        <Message Importance="normal" Text="Copying .dll to plugins"/>
+        <MakeDir Directories="$(GameDir)/BepInEx/plugins/$(TargetName)"/>
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)/BepInEx/plugins/$(TargetName)"/>
+        <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(GameDir)/BepInEx/plugins/$(TargetName)"/>
+        <MakeDir Directories="$(GameDir)/BepInEx/plugins/$(TargetName)/Localization" Condition="Exists('English.json') Or Exists('Localization')"/>
+        <ItemGroup Condition="Exists('Localization')">
+            <LocalizationFiles Include="Localization/*.json"/>
+        </ItemGroup>
+        <Message Importance="normal" Text="Copying localization to plugins" Condition="Exists(@(LocalizationFiles))"/>
+        <Copy SourceFiles="@(LocalizationFiles)" DestinationFolder="$(GameDir)/BepInEx/plugins/$(TargetName)/Localization" Condition="Exists(@(LocalizationFiles))"/>
+        <Copy SourceFiles="English.json" DestinationFolder="$(GameDir)/BepInEx/plugins/$(TargetName)/Localization" Condition="Exists('English.json')"/>
+
+    </Target>
+</Project>
