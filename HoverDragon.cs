@@ -42,7 +42,7 @@ public class HoverDragon : CreatureAsset
                                                       || ts.name.Contains("Neck.001")
                                                       || ts.name.Contains("Neck.002")
                                                       || ts.name.Contains("Neck.003")
-                                                      || ts.name.Contains("Tail"));//gimme a moment
+                                                      || ts.name.Contains("Tail"));
         tM.Apply();
         yield return null;
     }
