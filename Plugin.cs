@@ -31,7 +31,7 @@ public class Plugin : BaseUnityPlugin
          * harmony.PatchAll(Assembly or typeof(PATCHES CLASS HERE);
          */
         WaitScreenHandler.RegisterEarlyAsyncLoadTask("HoverDragon", LoadBundle, "LOADING HOVER DRAGON");
-        ConsoleCommandsHandler.RegisterConsoleCommand("", typeof(ConsoleCommands), nameof(ConsoleCommands.Echo), new []{typeof(string[])});
+        ConsoleCommandsHandler.RegisterConsoleCommand("echo", typeof(ConsoleCommands), nameof(ConsoleCommands.Echo), new []{typeof(string[])});
     }
 
     private static IEnumerator LoadBundle(WaitScreenHandler.WaitScreenTask task)
