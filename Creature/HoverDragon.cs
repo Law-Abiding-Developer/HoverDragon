@@ -9,9 +9,7 @@ namespace HoverDragon;
 
 public class HoverDragon : CreatureAsset
 {
-    public HoverDragon(PrefabInfo prefabInfo) : base(prefabInfo)
-    {
-    }
+    public HoverDragon(PrefabInfo prefabInfo) : base(prefabInfo) { }
 
     protected override CreatureTemplate CreateTemplate()
     {
@@ -20,8 +18,8 @@ public class HoverDragon : CreatureAsset
             BehaviourType.MediumFish, EcoTargetType.MediumFish, 320f);
         CreatureTemplateUtils.SetCreatureDataEssentials(template, LargeWorldEntity.CellLevel.Medium, 100f);
         CreatureTemplateUtils.SetCreatureMotionEssentials(template,
-            new SwimRandomData(0.4f, 4f, new Vector3(40f, 10f, 40f)), 
-            new StayAtLeashData(0.8f,5f, 8f, 28f));
+            new SwimRandomData(0.4f, 4f, new Vector3(40f, 10f, 40f)),
+            new StayAtLeashData(0.8f, 5f, 8f, 28f));
         template.SetCreatureComponentType<DragonFishComponent>();
         template.AvoidObstaclesData = new AvoidObstaclesData(1f, 4f, false, 5f, 10f);
         template.AnimateByVelocityData = new AnimateByVelocityData(8f);
@@ -37,21 +35,17 @@ public class HoverDragon : CreatureAsset
 
     protected override IEnumerator ModifyPrefab(GameObject prefab, CreatureComponents components)
     {
-        var tM = new TrailManagerBuilder(components, prefab.transform.SearchChild("Spine.001"), 2.5f, 0.25f);
-        tM.SetTrailArrayToChildrenWithCondition(ts => ts.name.Contains("Spine")
-                                                      || ts.name.Contains("Neck.001")
-                                                      || ts.name.Contains("Neck.002")
-                                                      || ts.name.Contains("Neck.003")
-                                                      || ts.name.Contains("Tail"));
-        tM.Apply();
+        var trailManager = new TrailManagerBuilder(components, prefab.transform.SearchChild("Spine.001"), 2.5f, 0.25f);
+        trailManager.SetTrailArrayToChildrenWithKeywords("Spine");
+        trailManager.Apply();
         yield return null;
     }
-    
+
     protected override void ApplyMaterials(GameObject prefab)
     {
         base.ApplyMaterials(prefab);
-        if (!prefab.TryGetComponent<SkinnedMeshRenderer>(out var sMr)) return;
-        sMr.material.SetFloat(ShaderPropertyID._MyCullVariable, 0f);
+        if (!prefab.TryGetComponent<SkinnedMeshRenderer>(out var skinnedMeshRenderer)) return;
+        skinnedMeshRenderer.material.SetFloat(ShaderPropertyID._MyCullVariable, 0f);
     }
 }
 
