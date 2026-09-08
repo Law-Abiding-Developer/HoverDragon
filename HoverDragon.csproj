@@ -28,7 +28,6 @@
         <PackageReference Include="Subnautica.Nautilus" Version="1.0.0-pre.51" PrivateAssets="all">
             <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="com.Indigocoder.SubLibrary" Version="1.6.0" />
     </ItemGroup>
 
     <!-- Dependency Adjustments -->
@@ -50,15 +49,16 @@
 
     <!-- Custom DLL References -->
     <ItemGroup>
-        <Reference Include="ECCLibrary">
-            <HintPath>Dependencies\ECCLibrary.dll</HintPath>
-        </Reference>
+       <Reference Include="ECCLibrary">
+            <HintPath>$(GameDir)\BepInEx\plugins\ECCLibrary\ECCLibrary.dll</HintPath>
+         <Private>false</Private>
+       </Reference>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\..\..\Downloads\English.json">
-        <Link>Localization\English.json</Link>
-      </Content>
+        <Content Include="Localization\English.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
     
 
